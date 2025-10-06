@@ -1,12 +1,445 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-   <title>geekombe.io</title>
-    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>geekombe.io</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #0a0a0a;
+            color: #e0e0e0;
+            font-family: 'Courier New', Courier, monospace;
+            line-height: 1.6;
+            overflow-x: hidden;
+            padding: 20px;
+        }
+
+        .terminal {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #000;
+            border: 2px solid #0f0;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 0 30px rgba(0, 255, 0, 0.3);
+        }
+
+        .terminal-header {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #0f0;
+        }
+
+        .prompt {
+            color: #0f0;
+            font-size: 1.1em;
+        }
+
+        .path {
+            color: #ff3333;
+        }
+
+        .dollar {
+            color: #1975f4;
+        }
+
+        .command {
+            color: #fff;
+        }
+
+        .blinking-cursor {
+            animation: blink 1s step-end infinite;
+            color: #0f0;
+        }
+
+        @keyframes blink {
+            50% {
+                opacity: 0;
+            }
+        }
+
+        .header-content {
+            display: grid;
+            grid-template-columns: 180px 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+            align-items: start;
+        }
+
+        .photo-placeholder {
+            width: 180px;
+            height: 180px;
+            border: 3px solid #0f0;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #0d0d0d;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+        }
+
+        .photo-placeholder svg {
+            width: 90px;
+            height: 90px;
+            opacity: 0.4;
+            fill: #0f0;
+        }
+
+        .contact-section {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .name-title {
+            color: #0f0;
+            font-size: 2em;
+            margin-bottom: 5px;
+            text-shadow: 0 0 15px rgba(0, 255, 0, 0.6);
+        }
+
+        .role {
+            color: #1975f4;
+            font-size: 1.2em;
+            margin-bottom: 15px;
+        }
+
+        .contact-line {
+            opacity: 1;
+        }
+
+        .output {
+            margin-top: 30px;
+        }
+
+        .line {
+            margin-bottom: 10px;
+        }
+
+        .typing-cursor {
+            color: #0f0;
+            animation: blink 1s step-end infinite;
+        }
+
+        .section-divider {
+            color: #0f0;
+            font-size: 1.1em;
+            margin: 30px 0 20px 0;
+            padding: 15px 0;
+            border-top: 1px solid #333;
+            border-bottom: 1px solid #333;
+        }
+
+        .section-title {
+            color: #0f0;
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+        }
+
+        .section-title::before {
+            content: '$ ';
+            color: #1975f4;
+        }
+
+        .item-block {
+            margin-bottom: 25px;
+            padding-left: 15px;
+            border-left: 2px solid #1975f4;
+        }
+
+        .item-title {
+            color: #1975f4;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .item-date {
+            color: #0f0;
+            font-size: 0.95em;
+            margin-top: 3px;
+        }
+
+        .item-company {
+            color: #fff;
+            margin-top: 3px;
+        }
+
+        .item-description {
+            margin-top: 8px;
+            padding-left: 10px;
+            color: #b0b0b0;
+        }
+
+        a {
+            color: #1975f4;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        a:hover {
+            color: #0f0;
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.8);
+        }
+
+        .summary-text {
+            color: #e0e0e0;
+            line-height: 1.8;
+            padding: 15px;
+            background: #0d0d0d;
+            border-left: 3px solid #0f0;
+            margin: 15px 0;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .terminal {
+                padding: 20px;
+            }
+
+            .header-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .photo-placeholder {
+                margin: 0 auto 20px;
+            }
+
+            .contact-section {
+                align-items: center;
+            }
+
+            .name-title {
+                font-size: 1.5em;
+            }
+
+            .prompt {
+                font-size: 0.9em;
+            }
+        }
+    </style>
 </head>
-  <body>
-      <div class="terminal">
-        <span class="prompt">geekombe@techanics.co.ke</span>:<span id="b">~</span><span id="c">$</span> sudo portfolio<span class="blinking-cursor">|</span>
-      </div>
-  </body>
+<body>
+    <div class="terminal">
+        <div class="terminal-header">
+            <span class="prompt">geekombe@techanics.co.ke</span>:<span class="path">~</span><span class="dollar">$</span> <span class="command">cat portfolio.txt</span><span class="blinking-cursor">|</span>
+        </div>
+
+        <div class="header-content">
+          <div class="photo-placeholder">
+            <img src="image.png" alt="Victor Njogu" style="width: 100%; height: 100%; object-fit: cover; border-radius: 5px;">
+        </div>
+            <div class="contact-section" id="contactSection">
+                <div class="name-title">Victor Njogu (geekombe)</div>
+                <div class="role">Entrepreneur, Engineer, and Technologist</div>
+            </div>
+        </div>
+
+        <div class="output" id="output"></div>
+    </div>
+
+    <script>
+        const contactInfo = [
+            "0700919007",
+            "geekombe@techanics.co.ke",
+        ];
+
+        const content = [
+            { type: 'divider', text: "═══════════════════════════════════════════════════════" },
+            { type: 'section', text: "me/" },
+            { type: 'summary', text: "I build tech that scale, empower businesses to grow, and create meaningful value for users." },
+            
+            { type: 'divider', text: "═══════════════════════════════════════════════════════" },
+            { type: 'section', text: "experience/" },
+            { type: 'empty' },
+            { type: 'title', text: "Founder & Chief Technology Officer (CTO)" },
+            { type: 'company', text: "wifimtaani.co.ke" },
+            { type: 'date', text: "08/2024 - Present" },
+            { type: 'desc', text: "→ Architected and launched a full-scale digital and physical network infrastructure. Set up and configured all key network equipment to ensure optimal performance and reliability" },
+            { type: 'empty' },
+            
+            { type: 'title', text: "Founder & Chief Technology Officer (CTO)" },
+            { type: 'company', text: "nexaproxy.com" },
+            { type: 'date', text: "12/2023 - Present" },
+            { type: 'desc', text: "→ I’ve been hands-on in every layer of its architecture, automation, and scaling. NexaProxy isn’t just a proxy service — it’s a platform redefining how people automate and stay ahead in the digital space." },
+            { type: 'empty' },
+            
+            { type: 'divider', text: "═══════════════════════════════════════════════════════" },
+            { type: 'section', text: "education/" },
+            { type: 'empty' },
+            { type: 'title', text: "Bachelors of Education" },
+            { type: 'company', text: "Mount Kenya University" },
+            { type: 'date', text: "09/2021 - Present" },
+            { type: 'empty' },
+            
+            { type: 'title', text: "Software Engineer/Dev" },
+            { type: 'company', text: "Moringa School" },
+            { type: 'date', text: "11/2023 - 08/2024" },
+            
+            { type: 'divider', text: "═══════════════════════════════════════════════════════" },
+            { type: 'section', text: "articles/" },
+            { type: 'empty' },
+            { type: 'title', text: "Why Internet Speed is Slower Than Advertised and How to Maximize It at Home" },
+            { type: 'desc', text: "→ Exploring the technical reasons behind advertised vs actual internet speeds and practical solutions for optimizing your home network performance." },
+            { type: 'link', text: "https://medium.com/@geekombe/why-internet-speed-is-slower-than-advertised-and-how-to-maximize-it-at-home-83f3bfc8bbe5", url: "https://medium.com/@geekombe/why-internet-speed-is-slower-than-advertised-and-how-to-maximize-it-at-home-83f3bfc8bbe5" },
+            
+            { type: 'divider', text: "═══════════════════════════════════════════════════════" },
+            { type: 'prompt', text: "geekombe@techanics.co.ke:~$ " }
+        ];
+
+        const contactSection = document.getElementById('contactSection');
+        const output = document.getElementById('output');
+        let contactIndex = 0;
+        let contentIndex = 0;
+
+        function typeText(element, text, speed, callback) {
+            let i = 0;
+            const cursor = document.createElement('span');
+            cursor.className = 'typing-cursor';
+            cursor.textContent = '▋';
+            element.appendChild(cursor);
+
+            function type() {
+                if (i < text.length) {
+                    cursor.before(text.charAt(i));
+                    i++;
+                    element.scrollIntoView({ behavior: 'smooth', block: 'end' });
+                    setTimeout(type, speed);
+                } else {
+                    cursor.remove();
+                    if (callback) callback();
+                }
+            }
+            type();
+        }
+
+        function displayContactInfo() {
+            if (contactIndex < contactInfo.length) {
+                const line = document.createElement('div');
+                line.className = 'contact-line';
+                contactSection.appendChild(line);
+                
+                typeText(line, contactInfo[contactIndex], 30, () => {
+                    contactIndex++;
+                    setTimeout(displayContactInfo, 100);
+                });
+            } else {
+                setTimeout(displayContent, 500);
+            }
+        }
+
+        function displayContent() {
+            if (contentIndex < content.length) {
+                const item = content[contentIndex];
+                const line = document.createElement('div');
+                line.className = 'line';
+
+                let htmlContent = '';
+                let textToType = '';
+                let speed = 20;
+
+                switch(item.type) {
+                    case 'divider':
+                        line.className = 'line section-divider';
+                        textToType = item.text;
+                        speed = 5;
+                        break;
+                    case 'section':
+                        line.innerHTML = `<div class="section-title"></div>`;
+                        output.appendChild(line);
+                        typeText(line.querySelector('.section-title'), item.text, 30, () => {
+                            contentIndex++;
+                            setTimeout(displayContent, 200);
+                        });
+                        return;
+                    case 'summary':
+                        line.innerHTML = `<div class="summary-text"></div>`;
+                        output.appendChild(line);
+                        typeText(line.querySelector('.summary-text'), item.text, 15, () => {
+                            contentIndex++;
+                            setTimeout(displayContent, 300);
+                        });
+                        return;
+                    case 'title':
+                        line.innerHTML = `<div class="item-block"><div class="item-title"></div>`;
+                        output.appendChild(line);
+                        typeText(line.querySelector('.item-title'), item.text, 20, () => {
+                            contentIndex++;
+                            setTimeout(displayContent, 100);
+                        });
+                        return;
+                    case 'company':
+                        line.innerHTML = `<div class="item-company"></div>`;
+                        output.appendChild(line);
+                        typeText(line.querySelector('.item-company'), item.text, 20, () => {
+                            contentIndex++;
+                            setTimeout(displayContent, 100);
+                        });
+                        return;
+                    case 'date':
+                        line.innerHTML = `<div class="item-date"></div></div>`;
+                        output.appendChild(line);
+                        typeText(line.querySelector('.item-date'), item.text, 20, () => {
+                            contentIndex++;
+                            setTimeout(displayContent, 100);
+                        });
+                        return;
+                    case 'desc':
+                        line.innerHTML = `<div class="item-description"></div>`;
+                        output.appendChild(line);
+                        typeText(line.querySelector('.item-description'), item.text, 10, () => {
+                            contentIndex++;
+                            setTimeout(displayContent, 200);
+                        });
+                        return;
+                    case 'link':
+                        line.innerHTML = `<a href="${item.url}" target="_blank"></a>`;
+                        output.appendChild(line);
+                        typeText(line.querySelector('a'), item.text, 15, () => {
+                            contentIndex++;
+                            setTimeout(displayContent, 200);
+                        });
+                        return;
+                    case 'empty':
+                        line.innerHTML = '&nbsp;';
+                        output.appendChild(line);
+                        contentIndex++;
+                        setTimeout(displayContent, 50);
+                        return;
+                    case 'prompt':
+                        line.innerHTML = `<span class="prompt"></span><span class="blinking-cursor">|</span>`;
+                        output.appendChild(line);
+                        typeText(line.querySelector('.prompt'), item.text, 30, () => {
+                            contentIndex++;
+                        });
+                        return;
+                    default:
+                        textToType = item.text;
+                }
+
+                if (textToType) {
+                    output.appendChild(line);
+                    typeText(line, textToType, speed, () => {
+                        contentIndex++;
+                        setTimeout(displayContent, 200);
+                    });
+                }
+            }
+        }
+
+        window.addEventListener('load', () => {
+            setTimeout(displayContactInfo, 500);
+        });
+    </script>
+</body>
 </html>
